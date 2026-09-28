@@ -1,4 +1,4 @@
-# langchain-jennah
+## langchain-jennah
 
 Jennah memory for LangChain: a retriever for recall, and a formation call that
 turns a LangChain conversation into long-term memory.
