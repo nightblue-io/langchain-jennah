@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "langchain-jennah"
+version = "0.1.0"
+description = "LangChain retriever and memory formation for Jennah"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = [
+  "jennah-sdk-py>=0.61.0",
+  "langchain-core>=1.6,<2",
+]
+
+[project.optional-dependencies]
+# Only examples/chat.py needs these; the adapter itself does not.
+examples = [
+  "langchain-anthropic>=1.7",
+  "langchain-google-genai>=4.4",
+]
+test = ["pytest>=8"]
+
+[project.urls]
+Source = "https://github.com/nightblue-io/langchain-jennah"
+
+[tool.hatch.build.targets.wheel]
+packages = ["langchain_jennah"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
