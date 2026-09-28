@@ -24,7 +24,8 @@ Requires Python 3.10 or later, `jennah-sdk-py` 0.61.0 or later, and
 `langchain-core` 1.x. The example agent also needs a chat model integration:
 
 ```sh
-pip install "langchain-jennah[examples] @ git+https://github.com/nightblue-io/langchain-jennah"
+pip install "langchain-jennah[examples] @ \
+  git+https://github.com/nightblue-io/langchain-jennah"
 ```
 
 ## Credentials
@@ -47,10 +48,14 @@ for d in docs:
     print(d.page_content, d.metadata["distance"])
 
 receipt = await memory.aform_memory(
-    [HumanMessage("I moved to Tokyo last month"), AIMessage("Congratulations!")],
+    [
+        HumanMessage("I moved to Tokyo last month"),
+        AIMessage("Congratulations!"),
+    ],
     formation_key="frm_session42_7",
 )
-print(receipt.edge_supersessions, [c.decision for c in receipt.candidates])
+print(receipt.edge_supersessions)
+print([c.decision for c in receipt.candidates])
 ```
 
 ### `JennahMemory(agent_id, *, client=None, async_client=None, limit=6, metadata_filter=None, endpoint=None, insecure=False)`
@@ -74,8 +79,11 @@ Wrapped as a tool, the retriever exposes only a query:
 ```python
 from langchain_core.tools import create_retriever_tool
 
-tool = create_retriever_tool(retriever, "recall", "Search the user's long-term memory.")
-# tool's input schema: {"query": string}. The model cannot pick another workspace.
+tool = create_retriever_tool(
+    retriever, "recall", "Search the user's long-term memory."
+)
+# The tool's input schema is {"query": string}.
+# The model cannot pick another workspace.
 ```
 
 ### `form_memory(messages, *, formation_key)` / `aform_memory(...)`
@@ -101,10 +109,18 @@ the reply, and hands that turn's formation to a single background worker, so
 you can keep chatting while memory forms:
 
 ```sh
-export JENNAH_API_KEY=jennah_sk_...      # or: jnh login
-export ANTHROPIC_API_KEY=sk-ant-...      # or GEMINI_API_KEY, or GOOGLE_CLOUD_PROJECT for Vertex AI
-python examples/chat.py                  # creates a demo.langchain_* workspace
-python examples/chat.py --agent demo.x   # reuses one
+# Jennah: an API key, or skip this and run `jnh login`
+export JENNAH_API_KEY=jennah_sk_...
+
+# Chat model: pick one
+export ANTHROPIC_API_KEY=sk-ant-...   # Anthropic
+export GEMINI_API_KEY=...             # Gemini on AI Studio
+export GOOGLE_CLOUD_PROJECT=my-proj   # Gemini on Vertex AI
+
+# Creates a demo.langchain_* workspace
+python examples/chat.py
+# Reuses one
+python examples/chat.py --agent demo.x
 ```
 
 ```text
